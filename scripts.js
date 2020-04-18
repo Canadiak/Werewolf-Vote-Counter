@@ -87,6 +87,10 @@ array_votesToDisplay =  votesToDisplayArrayJSON["dictList"];
 let listOfVotedUsers = [];
 let listOfVoteInfo = [];
 
+//listOfVotedUsers creation, it is a list that contains the name of everyone voted. 
+//It is just used to add people voting the same person to listOfVotedInfo.
+
+//listOfVoteInfo creation, it contains the actual vote info.
 for (let counter = 0; counter < array_votesToDisplay.length; counter++){
 	
 	let voter = array_votesToDisplay[counter].voter;
@@ -168,12 +172,12 @@ function quickSort(items, left, right) {
 
 
 // first call
-sortedListOfVotedUsers = quickSort(listOfVotedUsers, 0, listOfVotedUsers.length - 1);
+sortedListOfVotedUsers = quickSort(listOfVoteInfo, 0, listOfVoteInfo.length - 1);
 
 
 output = "<h2>Voted Count: </h2>";
 let voteForUser = 0;
-for (let counter = listOfVotedUsers.length-1; counter >= 0; counter--){
+for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 	let voterListOfVoted = listOfVoteInfo[counter]["voters"];
 	let voterListOfVoteNums = listOfVoteInfo[counter]["voterVoteNums"];
 	output += `<h4>${listOfVoteInfo[counter]["name"]}: ${voterListOfVoted.length}</h4>`

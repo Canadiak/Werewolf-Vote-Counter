@@ -1,4 +1,7 @@
 Changelog
 
+Version 1.21:
+Fixed bug where the list of voted, instead of list of vote information, was attempted to be sorted.
+
 Version 1.2:
 Added quicksort so the voter with the most votes is on top.
