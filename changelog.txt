@@ -1,0 +1,4 @@
+Changelog
+
+Version 1.2:
+Added quicksort so the voter with the most votes is on top.
