@@ -1,5 +1,8 @@
 Changelog
 
+Version 1.32:
+Added ability to export and import codes that contain the full votecount information. 
+
 Version 1.31:
 Removed requirement to add comment number. Added proposal to deleted function.
 

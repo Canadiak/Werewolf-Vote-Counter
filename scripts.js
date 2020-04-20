@@ -81,6 +81,13 @@ deleteButton.onclick = function(){
 	location.reload();	
 }
 
+importButton.onclick = function(){
+	
+	import_string_JSONwithArrayOfVoteDicts = inpVoteCode.value;
+	localStorage.setItem("Vote Count", import_string_JSONwithArrayOfVoteDicts);
+	location.reload();	
+}
+
 
 string_votesToDisplayArrayJSON = localStorage.getItem('Vote Count');
 votesToDisplayArrayJSON = JSON.parse(string_votesToDisplayArrayJSON);
@@ -192,7 +199,8 @@ for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 	}
 	output += '<br><br>';
 	
+	
 }
 
-
+output += `${localStorage.getItem("Vote Count")}`
 voteCountOutput.innerHTML = output;
