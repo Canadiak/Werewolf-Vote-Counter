@@ -1,5 +1,14 @@
 Changelog
 
+Version 1.41:
+Two new buttons, sort by proposal number and sort by most votes. Sorting only happens when clicked.
+
+Version 1.4:
+Added checkboxes for voting and deleting votes.
+
+Version 1.33:
+Seperated proposal adding and voting. Now there are radio buttons with list of proposals you want to vote for.
+
 Version 1.32:
 Added ability to export and import codes that contain the full votecount information. 
 

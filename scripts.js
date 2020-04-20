@@ -17,11 +17,13 @@ const resetButton = document.getElementById("resetButton");
 let output = '';
 let entryAlreadyExists = 0;
 
-submitButton.onclick = function(){
+
+
+proposeButton.onclick = function(){
 		
-	let voterInput = inpVoter.value;
+	let voterInput = inpProposer.value;
 	let votedInput = inpVoted.value;
-	let voteNumInput = inpVoteNum.value;
+	let voteNumInput = inpPropNum.value;
 	
 	//Make sure a valid submission is entered
 	if(voterInput && votedInput) {
@@ -61,26 +63,6 @@ resetButton.onclick = function(){
 	
 }
 
-deleteButton.onclick = function(){
-	
-	let voteDelete = inpVoteDelete.value;
-	let propDelete = inpPropDelete.value;
-	
-	let string_currentJSONwithArrayOfVoteDicts = localStorage.getItem("Vote Count");
-	let currentJSONwithArrayOfVoteDicts = JSON.parse(string_currentJSONwithArrayOfVoteDicts);
-	//Edited to add a voted section to the deleted
-	for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
-		if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == voteDelete && currentJSONwithArrayOfVoteDicts["dictList"][counter].voted == propDelete) {
-			//console.log("Check");
-			currentJSONwithArrayOfVoteDicts["dictList"].splice(counter, 1);
-			//console.log(currentJSONwithArrayOfVoteDicts["dictList"][counter].voter);
-		}
-		
-	}	
-	localStorage.setItem("Vote Count", JSON.stringify(currentJSONwithArrayOfVoteDicts));
-	location.reload();	
-}
-
 importButton.onclick = function(){
 	
 	import_string_JSONwithArrayOfVoteDicts = inpVoteCode.value;
@@ -106,10 +88,13 @@ for (let counter = 0; counter < array_votesToDisplay.length; counter++){
 	let voted = array_votesToDisplay[counter].voted;
 	let voteNum= array_votesToDisplay[counter].voteNum;
 	
+	
 	if (!listOfVotedUsers.includes(voted)){
 		listOfVotedUsers.push(voted);
+		let propNum = listOfVotedUsers.length;
 		listOfVoteInfo.push({	
 			"name" : voted,
+			"proposalNum" : propNum,
 			"voters" : [voter],
 			"voterVoteNums" : [voteNum]
 		});
@@ -132,47 +117,78 @@ function swap(items, firstIndex, secondIndex){
     items[secondIndex] = temp;
 }
 
-function partition(items, left, right) {
+//Give a 1 for sort by votes, 2 for sort by proposal in sortType.
+function partition(items, left, right, sortType) {
+	let pivot = 0;
+	if (sortType == 1){
+		console.log(items[Math.floor((right + left) / 2)])
+		pivot = items[Math.floor((right + left) / 2)]["voters"].length;
+	}else{
+		console.log(items[Math.floor((right + left) / 2)])
+		pivot = items[Math.floor((right + left) / 2)]["proposalNum"];
+	}
+	
+	
+    let i = left;
+    let j = right;
 
-    var pivot   = items[Math.floor((right + left) / 2)]["voters"].length,
-        i       = left,
-        j       = right;
+	if(sortType == 1){
+		while (i <= j) {
 
+			while (items[i]["voters"].length < pivot) {
+				i++;
+			}
 
-    while (i <= j) {
+			while (items[j]["voters"].length > pivot) {
+				j--;
+			}
 
-        while (items[i]["voters"].length < pivot) {
-            i++;
-        }
+			if (i <= j) {
+				swap(items, i, j);
+				i++;
+				j--;
+			}
+		}
+	}
+	else{
+		while (i <= j) {
 
-        while (items[j]["voters"].length > pivot) {
-            j--;
-        }
+			while (items[i]["proposalNum"] < pivot) {
+				i++;
+			}
 
-        if (i <= j) {
-            swap(items, i, j);
-            i++;
-            j--;
-        }
-    }
+			while (items[j]["proposalNum"] > pivot) {
+				j--;
+			}
+
+			if (i <= j) {
+				swap(items, i, j);
+				i++;
+				j--;
+			}
+		}
+				
+	}
 
     return i;
 }
 
-function quickSort(items, left, right) {
+//Give a 1 for sort by votes, 2 for sort by proposal in sortType.
+function quickSort(items, left, right, sortType) {
 
     var index;
+	
 
     if (items.length > 1) {
 
-        index = partition(items, left, right);
+        index = partition(items, left, right, sortType);
 
         if (left < index - 1) {
-            quickSort(items, left, index - 1);
+            quickSort(items, left, index - 1, sortType);
         }
 
         if (index < right) {
-            quickSort(items, index, right);
+            quickSort(items, index, right, sortType);
         }
 
     }
@@ -182,15 +198,25 @@ function quickSort(items, left, right) {
 
 
 // first call
-sortedListOfVotedUsers = quickSort(listOfVoteInfo, 0, listOfVoteInfo.length - 1);
+voteSortButton.onclick = function(){
+	
+	quickSort(listOfVoteInfo, 0, listOfVoteInfo.length - 1, 1);
+	
+}
+
+sortByProposalNumberButton.onclick = function(){
+	
+	quickSort(listOfVoteInfo, 0, listOfVoteInfo.length - 1, 2);
+	
+}
 
 
-output = "<h2>Voted Count: </h2>";
+output = "<h2>Vote Count: </h2>";
 let voteForUser = 0;
 for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 	let voterListOfVoted = listOfVoteInfo[counter]["voters"];
 	let voterListOfVoteNums = listOfVoteInfo[counter]["voterVoteNums"];
-	output += `<h4>${listOfVoteInfo[counter]["name"]}: ${voterListOfVoted.length}</h4>`
+	output += `<h4>Proposal Number ${listOfVoteInfo[counter]["proposalNum"]}, ${listOfVoteInfo[counter]["name"]}: ${voterListOfVoted.length}</h4>`
 	
 	
 	for (let counter2 = 0; counter2 < voterListOfVoted.length; counter2 ++){
@@ -204,3 +230,106 @@ for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 
 output += `${localStorage.getItem("Vote Count")}`
 voteCountOutput.innerHTML = output;
+
+let voteSubmissionHTML = '';
+for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
+	
+	voteSubmissionHTML += `<input type="checkbox" id="proposal ${listOfVoteInfo[counter]["proposalNum"]}"> `
+
+	voteSubmissionHTML += `<label for="proposal ${listOfVoteInfo[counter]["proposalNum"]}"> ${listOfVoteInfo[counter]["name"]}</label><br>`
+}
+
+voteSubmissionDiv.innerHTML = voteSubmissionHTML;
+
+voteButton.onclick = function(){
+	
+	let voterInput = inpVoter.value;
+	//let votedInput = inpVoted.value;
+	let voteNumInput = inpVotepNum.value;
+	let votedInput = [];
+	for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
+		
+		if (eval(`proposal ${listOfVoteInfo[counter]["proposalNum"]}`).checked == true){
+			
+			votedInput.push(listOfVoteInfo[counter]["name"])
+			
+		}
+		
+	}
+	
+	//Make sure a valid submission is entered
+	if(voterInput) {
+		for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
+			let submittedVoteDict = {}
+			submittedVoteDict.voter = voterInput;
+			submittedVoteDict.voted = votedInput[counter];
+			submittedVoteDict.voteNum = voteNumInput;
+			
+			let string_currentJSONwithArrayOfVoteDicts = localStorage.getItem("Vote Count");
+			let currentJSONwithArrayOfVoteDicts = JSON.parse(string_currentJSONwithArrayOfVoteDicts);
+			
+			//Check if voter already voted
+			/*for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
+				if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == submittedVoteDict.voter) {
+					
+					currentJSONwithArrayOfVoteDicts["dictList"][counter].voted = submittedVoteDict.voted;
+					currentJSONwithArrayOfVoteDicts["dictList"][counter].voteNum += " => " + submittedVoteDict.voteNum;
+					entryAlreadyExists = 1;
+					break;
+				}
+				
+			} */
+			
+			if (!entryAlreadyExists){
+				currentJSONwithArrayOfVoteDicts["dictList"].push(submittedVoteDict);
+			}		
+			localStorage.setItem("Vote Count", JSON.stringify(currentJSONwithArrayOfVoteDicts));
+			//location.reload();
+		}			
+	}	
+	
+}
+
+
+
+let deleteSubmissionHTML = '';
+for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
+	
+	deleteSubmissionHTML += `<input type="checkbox" id="proposal ${listOfVoteInfo[counter]["proposalNum"]}" value="${listOfVoteInfo[counter]["name"]}"> `
+
+	deleteSubmissionHTML += `<label for="proposal ${listOfVoteInfo[counter]["proposalNum"]}"> ${listOfVoteInfo[counter]["name"]}</label><br>`
+}
+
+deleteSubmissionDiv.innerHTML = deleteSubmissionHTML;
+
+deleteButton.onclick = function(){
+	
+	let voterDelete = inpVoteDelete.value;
+	
+	let deleteInput = [];
+	for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
+		
+		if (eval(`proposal ${listOfVoteInfo[counter]["proposalNum"]}`).checked == true){
+			
+			deleteInput.push(listOfVoteInfo[counter]["name"])
+			
+		}
+		
+	}
+	
+	let string_currentJSONwithArrayOfVoteDicts = localStorage.getItem("Vote Count");
+	let currentJSONwithArrayOfVoteDicts = JSON.parse(string_currentJSONwithArrayOfVoteDicts);
+	//Edited to add a voted section to the deleted
+	for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
+		for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
+			if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == voterDelete && currentJSONwithArrayOfVoteDicts["dictList"][counter].voted == deleteInput[counter]) {
+				//console.log("Check");
+				currentJSONwithArrayOfVoteDicts["dictList"].splice(counter, 1);
+				//console.log(currentJSONwithArrayOfVoteDicts["dictList"][counter].voter);
+			}
+		}
+	}	
+	localStorage.setItem("Vote Count", JSON.stringify(currentJSONwithArrayOfVoteDicts));
+	location.reload();	
+}
+

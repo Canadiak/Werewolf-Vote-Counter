@@ -42,14 +42,29 @@
 		
 		<fieldset>
 		
-			<legend>Insert Vote</legend>
-			<input id="inpVoter" type="text" placeholder="Enter Voter">
+			<legend>Insert New Proposal</legend>
+			<input id="inpProposer" type="text" placeholder="Enter Voter">
 			
 			<input id="inpVoted" type="text" placeholder="Enter Proposal">
 			
+			<input id="inpPropNum" type="text" placeholder="Enter Comment #">
+			
+			<button type="button" id="proposeButton">Submit Proposal</button>
+		</fieldset>
+		
+		<fieldset>
+		
+			<legend>Submit Votes</legend>
+			<input id="inpVoter" type="text" placeholder="Enter Voter">
+			<button type="button" id="voteSortButton">Sort by most votes</button>
+			<button type="button" id="sortByProposalNumberButton">Sort by proposal number</button>
+			
+			<div id="voteSubmissionDiv"></div>
+			<br><br>
+			
 			<input id="inpVoteNum" type="text" placeholder="Enter Comment #">
 			
-			<button type="button" id="submitButton">Submit Vote</button>
+			<button type="button" id="voteButton">Submit Votes</button>
 		</fieldset>
 		
 		<fieldset>
@@ -62,13 +77,13 @@
 		<fieldset>
 			<legend>Delete Vote</legend>
 			<input id="inpVoteDelete" type="text" placeholder="Enter Voter">
-			<input id="inpPropDelete" type="text" placeholder="Enter Proposal">
+			<div id="deleteSubmissionDiv"></div>
+			<br><br>
 			<button type="button" id="deleteButton">Delete Vote</button>
+			<button type="button" id="resetButton">Reset Vote Count</button>
 		</fieldset>
 		
-		<br>
 		
-		<button type="button" id="resetButton">Reset Vote Count</button>
 		
 		<fieldset>
 			<legend>Import Vote Count Code</legend>
