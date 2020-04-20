@@ -1,5 +1,11 @@
 Changelog
 
+Version 1.31:
+Removed requirement to add comment number. Added proposal to deleted function.
+
+Version 1.3:
+Made especially for the Greek game, where people are allowed to vote for more than one proposal.
+
 Version 1.21:
 Fixed bug where the list of voted, instead of list of vote information, was attempted to be sorted.
 

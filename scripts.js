@@ -24,7 +24,7 @@ submitButton.onclick = function(){
 	let voteNumInput = inpVoteNum.value;
 	
 	//Make sure a valid submission is entered
-	if(voterInput && votedInput && voteNumInput) {
+	if(voterInput && votedInput) {
 	
 		let submittedVoteDict = {}
 		submittedVoteDict.voter = voterInput;
@@ -35,7 +35,7 @@ submitButton.onclick = function(){
 		let currentJSONwithArrayOfVoteDicts = JSON.parse(string_currentJSONwithArrayOfVoteDicts);
 		
 		//Check if voter already voted
-		for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
+		/*for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
 			if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == submittedVoteDict.voter) {
 				
 				currentJSONwithArrayOfVoteDicts["dictList"][counter].voted = submittedVoteDict.voted;
@@ -44,13 +44,13 @@ submitButton.onclick = function(){
 				break;
 			}
 			
-		}
+		} */
 		
 		if (!entryAlreadyExists){
 			currentJSONwithArrayOfVoteDicts["dictList"].push(submittedVoteDict);
 		}		
 		localStorage.setItem("Vote Count", JSON.stringify(currentJSONwithArrayOfVoteDicts));
-		location.reload();	
+		//location.reload();	
 	}	
 };
 
@@ -64,11 +64,13 @@ resetButton.onclick = function(){
 deleteButton.onclick = function(){
 	
 	let voteDelete = inpVoteDelete.value;
+	let propDelete = inpPropDelete.value;
 	
 	let string_currentJSONwithArrayOfVoteDicts = localStorage.getItem("Vote Count");
 	let currentJSONwithArrayOfVoteDicts = JSON.parse(string_currentJSONwithArrayOfVoteDicts);
+	//Edited to add a voted section to the deleted
 	for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
-		if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == voteDelete) {
+		if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == voteDelete && currentJSONwithArrayOfVoteDicts["dictList"][counter].voted == propDelete) {
 			//console.log("Check");
 			currentJSONwithArrayOfVoteDicts["dictList"].splice(counter, 1);
 			//console.log(currentJSONwithArrayOfVoteDicts["dictList"][counter].voter);
@@ -116,6 +118,7 @@ for (let counter = 0; counter < array_votesToDisplay.length; counter++){
 //Source: https://humanwhocodes.com/blog/2012/11/27/computer-science-in-javascript-quicksort/
 //Modified slightly because it's sorted by listOfVoteInfo[index]["voters"].length, instead of just the value at listOfVoteInfo[index].
 //But swap stays the same, because you do want to swap listOfVoteInfo[i] and listOfVoteInfo[j]
+
 function swap(items, firstIndex, secondIndex){
     var temp = items[firstIndex];
     items[firstIndex] = items[secondIndex];
