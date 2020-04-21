@@ -17,6 +17,10 @@ const resetButton = document.getElementById("resetButton");
 let output = '';
 let entryAlreadyExists = 0;
 
+if (localStorage.key(1) == null){
+	localStorage.setItem("sortBy", "1");
+}
+
 
 
 proposeButton.onclick = function(){
@@ -55,6 +59,30 @@ proposeButton.onclick = function(){
 		//location.reload();	
 	}	
 };
+
+/*proposalNumberButton.onclick = function(){
+		
+	let proposalName = inpPropName;
+	let proposalNum = inpPropNum;
+	
+	//Make sure a valid submission is entered
+	if(proposalNum && proposalName) {
+	
+		let string_currentJSONwithArrayOfVoteDicts = localStorage.getItem("Vote Count");
+		let currentJSONwithArrayOfVoteDicts = JSON.parse(string_currentJSONwithArrayOfVoteDicts);
+		//Edited to add a voted section to the deleted
+		for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
+		
+			if (currentJSONwithArrayOfVoteDicts[counter]["name"] == proposalName){
+				
+				currentJSONwithArrayOfVoteDicts[counter]["proposalNum"] = proposalNum;
+				
+			}
+		}		
+		localStorage.setItem("Vote Count", JSON.stringify(currentJSONwithArrayOfVoteDicts));
+		//location.reload();	
+	}	
+}; */
 
 resetButton.onclick = function(){
 	
@@ -121,12 +149,12 @@ function swap(items, firstIndex, secondIndex){
 function partition(items, left, right, sortType) {
 	let pivot = 0;
 	if (sortType == 1){
-		console.log(items[Math.floor((right + left) / 2)])
+		//console.log(items[Math.floor((right + left) / 2)])
 		pivot = items[Math.floor((right + left) / 2)]["voters"].length;
-	}else{
-		console.log(items[Math.floor((right + left) / 2)])
+	}  else{
+		//console.log(items[Math.floor((right + left) / 2)])
 		pivot = items[Math.floor((right + left) / 2)]["proposalNum"];
-	}
+	} 
 	
 	
     let i = left;
@@ -200,23 +228,26 @@ function quickSort(items, left, right, sortType) {
 // first call
 voteSortButton.onclick = function(){
 	
-	quickSort(listOfVoteInfo, 0, listOfVoteInfo.length - 1, 1);
+	localStorage.setItem('sortBy', '1');
+	location.reload();
 	
 }
 
 sortByProposalNumberButton.onclick = function(){
 	
-	quickSort(listOfVoteInfo, 0, listOfVoteInfo.length - 1, 2);
+	localStorage.setItem('sortBy', '2');
+	location.reload();
 	
 }
-
+sortBy = parseInt(localStorage.getItem('sortBy'));
+quickSort(listOfVoteInfo, 0, listOfVoteInfo.length - 1, sortBy);
 
 output = "<h2>Vote Count: </h2>";
 let voteForUser = 0;
 for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 	let voterListOfVoted = listOfVoteInfo[counter]["voters"];
 	let voterListOfVoteNums = listOfVoteInfo[counter]["voterVoteNums"];
-	output += `<h4>Proposal Number ${listOfVoteInfo[counter]["proposalNum"]}, ${listOfVoteInfo[counter]["name"]}: ${voterListOfVoted.length}</h4>`
+	output += `<h4>  ${listOfVoteInfo[counter]["name"]}: ${voterListOfVoted.length}</h4>`
 	
 	
 	for (let counter2 = 0; counter2 < voterListOfVoted.length; counter2 ++){

@@ -1,5 +1,8 @@
 Changelog
 
+Version 1.42:
+Fixed sorting. 
+
 Version 1.41:
 Two new buttons, sort by proposal number and sort by most votes. Sorting only happens when clicked.
 
@@ -23,3 +26,4 @@ Fixed bug where the list of voted, instead of list of vote information, was atte
 
 Version 1.2:
 Added quicksort so the voter with the most votes is on top.
+
