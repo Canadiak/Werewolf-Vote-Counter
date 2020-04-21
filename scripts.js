@@ -8,12 +8,13 @@ if (localStorage.key(0) == null){
 	let string_JSONwithArrayOfVoteDicts = JSON.stringify(JSONwithArrayOfVoteDicts)
 	localStorage.setItem("Vote Count", string_JSONwithArrayOfVoteDicts);
 }
+/*
 const inpVoter = document.getElementById("inpVoter");
 const inpVoted = document.getElementById("inpVoted");
 const inpVoteNum = document.getElementById("inpVoteNum");
 const submitButton = document.getElementById("submitButton");
 const voteCountOutput = document.getElementById("voteCountOutput");
-const resetButton = document.getElementById("resetButton");
+const resetButton = document.getElementById("resetButton"); */
 let output = '';
 let entryAlreadyExists = 0;
 
@@ -181,11 +182,11 @@ function partition(items, left, right, sortType) {
 	else{
 		while (i <= j) {
 
-			while (items[i]["proposalNum"] < pivot) {
+			while (items[i]["proposalNum"] > pivot) {
 				i++;
 			}
 
-			while (items[j]["proposalNum"] > pivot) {
+			while (items[j]["proposalNum"] < pivot) {
 				j--;
 			}
 
@@ -239,11 +240,13 @@ sortByProposalNumberButton.onclick = function(){
 	location.reload();
 	
 }
+//sortBy is 1 means number of votes. 2 means proposal number.
 sortBy = parseInt(localStorage.getItem('sortBy'));
 quickSort(listOfVoteInfo, 0, listOfVoteInfo.length - 1, sortBy);
 
 output = "<h2>Vote Count: </h2>";
 let voteForUser = 0;
+//if (sortBy == 1){
 for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 	let voterListOfVoted = listOfVoteInfo[counter]["voters"];
 	let voterListOfVoteNums = listOfVoteInfo[counter]["voterVoteNums"];
@@ -255,8 +258,7 @@ for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 		output += `${voterListOfVoted[counter2]} [${voterListOfVoteNums[counter2]}]<br>`;
 	}
 	output += '<br><br>';
-	
-	
+			
 }
 
 output += `${localStorage.getItem("Vote Count")}`
@@ -265,9 +267,10 @@ voteCountOutput.innerHTML = output;
 let voteSubmissionHTML = '';
 for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 	
-	voteSubmissionHTML += `<input type="checkbox" id="proposal ${listOfVoteInfo[counter]["proposalNum"]}"> `
-
-	voteSubmissionHTML += `<label for="proposal ${listOfVoteInfo[counter]["proposalNum"]}"> ${listOfVoteInfo[counter]["name"]}</label><br>`
+	voteSubmissionHTML += `<input type="checkbox" id="proposal_${listOfVoteInfo[counter]["proposalNum"]}"> `;
+	//voteSubmissionDiv.innerHTML = voteSubmissionHTML;
+	//console.log(eval(`proposal_${listOfVoteInfo[counter]["proposalNum"]}`).checked);
+	voteSubmissionHTML += `<label for="proposal_${listOfVoteInfo[counter]["proposalNum"]}"> ${listOfVoteInfo[counter]["name"]}</label><br>`;
 }
 
 voteSubmissionDiv.innerHTML = voteSubmissionHTML;
@@ -276,11 +279,15 @@ voteButton.onclick = function(){
 	
 	let voterInput = inpVoter.value;
 	//let votedInput = inpVoted.value;
-	let voteNumInput = inpVotepNum.value;
+	let voteNumInput = inpVoteNum.value;
+	
 	let votedInput = [];
 	for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
-		
-		if (eval(`proposal ${listOfVoteInfo[counter]["proposalNum"]}`).checked == true){
+		let checkBox = document.getElementById(`proposal_${listOfVoteInfo[counter]["proposalNum"]}`);
+		//console.log(checkBox);
+		//console.log(eval(`inpProposer.value`));
+		//console.log(checkBox.checked);
+		if (checkBox.checked == true){
 			
 			votedInput.push(listOfVoteInfo[counter]["name"])
 			
@@ -326,9 +333,9 @@ voteButton.onclick = function(){
 let deleteSubmissionHTML = '';
 for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 	
-	deleteSubmissionHTML += `<input type="checkbox" id="proposal ${listOfVoteInfo[counter]["proposalNum"]}" value="${listOfVoteInfo[counter]["name"]}"> `
+	deleteSubmissionHTML += `<input type="checkbox" id="proposal_${listOfVoteInfo[counter]["proposalNum"]}" value="${listOfVoteInfo[counter]["name"]}"> `
 
-	deleteSubmissionHTML += `<label for="proposal ${listOfVoteInfo[counter]["proposalNum"]}"> ${listOfVoteInfo[counter]["name"]}</label><br>`
+	deleteSubmissionHTML += `<label for="proposal_${listOfVoteInfo[counter]["proposalNum"]}"> ${listOfVoteInfo[counter]["name"]}</label><br>`
 }
 
 deleteSubmissionDiv.innerHTML = deleteSubmissionHTML;
@@ -339,8 +346,8 @@ deleteButton.onclick = function(){
 	
 	let deleteInput = [];
 	for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
-		
-		if (eval(`proposal ${listOfVoteInfo[counter]["proposalNum"]}`).checked == true){
+		let checkBox = document.getElementById(`proposal_${listOfVoteInfo[counter]["proposalNum"]}`);
+		if (checkBox.checked == true){
 			
 			deleteInput.push(listOfVoteInfo[counter]["name"])
 			
@@ -352,8 +359,8 @@ deleteButton.onclick = function(){
 	let currentJSONwithArrayOfVoteDicts = JSON.parse(string_currentJSONwithArrayOfVoteDicts);
 	//Edited to add a voted section to the deleted
 	for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
-		for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
-			if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == voterDelete && currentJSONwithArrayOfVoteDicts["dictList"][counter].voted == deleteInput[counter]) {
+		for (let counter2 = 0; counter2 < deleteInput; counter2--){
+			if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == voterDelete && currentJSONwithArrayOfVoteDicts["dictList"][counter].voted == deleteInput[counter2]) {
 				//console.log("Check");
 				currentJSONwithArrayOfVoteDicts["dictList"].splice(counter, 1);
 				//console.log(currentJSONwithArrayOfVoteDicts["dictList"][counter].voter);
