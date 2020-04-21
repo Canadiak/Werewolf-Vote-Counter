@@ -1,5 +1,5 @@
 # Werewolf-Vote-Counter
-Vote Counter for Werewolf. Currently going through bug testing.
+Vote Counter for Werewolf. Currently going through bug testing. I believe it's bug free at the moment.
 
 How to use: Enter the person voting in the 'enter voter' box and the proposal you're voting for in the 'enter proposal' box. Comment # is optional. Then press submit vote. Reloading the page will make the votes appear, and then you can copy paste into the forum. 
 
