@@ -1,5 +1,11 @@
 Changelog
 
+Version 1.45:
+Fixed deletion.
+
+Version 1.44:
+Fixed vote entry for real, hopefully
+
 Version 1.43:
 Fixed vote entry
 

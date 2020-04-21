@@ -288,7 +288,8 @@ voteButton.onclick = function(){
 		//console.log(eval(`inpProposer.value`));
 		//console.log(checkBox.checked);
 		if (checkBox.checked == true){
-			
+			//console.log("Check");
+			//console.log(listOfVoteInfo[counter]["name"]);
 			votedInput.push(listOfVoteInfo[counter]["name"])
 			
 		}
@@ -297,7 +298,7 @@ voteButton.onclick = function(){
 	
 	//Make sure a valid submission is entered
 	if(voterInput) {
-		for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
+		for (let counter = 0; counter < votedInput.length; counter++){
 			let submittedVoteDict = {}
 			submittedVoteDict.voter = voterInput;
 			submittedVoteDict.voted = votedInput[counter];
@@ -325,7 +326,7 @@ voteButton.onclick = function(){
 			//location.reload();
 		}			
 	}	
-	
+	location.reload();
 }
 
 
@@ -333,7 +334,7 @@ voteButton.onclick = function(){
 let deleteSubmissionHTML = '';
 for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
 	
-	deleteSubmissionHTML += `<input type="checkbox" id="proposal_${listOfVoteInfo[counter]["proposalNum"]}" value="${listOfVoteInfo[counter]["name"]}"> `
+	deleteSubmissionHTML += `<input type="checkbox" id="dProposal_${listOfVoteInfo[counter]["proposalNum"]}" value="${listOfVoteInfo[counter]["name"]}"> `
 
 	deleteSubmissionHTML += `<label for="proposal_${listOfVoteInfo[counter]["proposalNum"]}"> ${listOfVoteInfo[counter]["name"]}</label><br>`
 }
@@ -346,10 +347,11 @@ deleteButton.onclick = function(){
 	
 	let deleteInput = [];
 	for (let counter = listOfVoteInfo.length-1; counter >= 0; counter--){
-		let checkBox = document.getElementById(`proposal_${listOfVoteInfo[counter]["proposalNum"]}`);
+		//console.log("Debug1");
+		let checkBox = document.getElementById(`dProposal_${listOfVoteInfo[counter]["proposalNum"]}`);
 		if (checkBox.checked == true){
-			
-			deleteInput.push(listOfVoteInfo[counter]["name"])
+			//console.log("Debug2");
+			deleteInput.push(listOfVoteInfo[counter]["name"]);
 			
 		}
 		
@@ -358,16 +360,24 @@ deleteButton.onclick = function(){
 	let string_currentJSONwithArrayOfVoteDicts = localStorage.getItem("Vote Count");
 	let currentJSONwithArrayOfVoteDicts = JSON.parse(string_currentJSONwithArrayOfVoteDicts);
 	//Edited to add a voted section to the deleted
+	//console.log("Check1");
 	for (let counter = 0; counter < currentJSONwithArrayOfVoteDicts["dictList"].length; counter++){
-		for (let counter2 = 0; counter2 < deleteInput; counter2--){
+		/* console.log("Check1");
+		currentJSONwithArrayOfVoteDicts["dictList"].splice(counter, 1);
+		console.log(currentJSONwithArrayOfVoteDicts["dictList"][counter].voter);
+		console.log(currentJSONwithArrayOfVoteDicts["dictList"][counter].voted); 
+		console.log(deleteInput[0]); */
+		//console.log("check2");
+		for (let counter2 = 0; counter2 < deleteInput.length; counter2++){
+			//console.log("check3");
 			if (currentJSONwithArrayOfVoteDicts["dictList"][counter].voter == voterDelete && currentJSONwithArrayOfVoteDicts["dictList"][counter].voted == deleteInput[counter2]) {
-				//console.log("Check");
+				console.log("check4");
+				console.log(deleteInput[counter2]);
 				currentJSONwithArrayOfVoteDicts["dictList"].splice(counter, 1);
-				//console.log(currentJSONwithArrayOfVoteDicts["dictList"][counter].voter);
 			}
 		}
 	}	
 	localStorage.setItem("Vote Count", JSON.stringify(currentJSONwithArrayOfVoteDicts));
-	location.reload();	
+	//location.reload();	
 }
 
